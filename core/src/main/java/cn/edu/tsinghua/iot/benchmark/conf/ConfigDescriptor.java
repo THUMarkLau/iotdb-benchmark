@@ -304,6 +304,22 @@ public class ConfigDescriptor {
             Boolean.parseBoolean(
                 properties.getProperty(
                     "ENABLE_THRIFT_COMPRESSION", config.isENABLE_THRIFT_COMPRESSION() + "")));
+        config.setRECORD_CONVERT_FACTOR(
+            Double.parseDouble(
+                properties.getProperty(
+                    "RECORD_CONVERT_FACTOR", config.getRECORD_CONVERT_FACTOR() + "")));
+        config.setUseNewRecordsColumnFormat(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "USE_NEW_RECORDS_COLUMN_FORMAT", config.isUseNewRecordsColumnFormat() + "")));
+        config.setUseValueCompressionInNewRPC(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "USE_VALUE_COMPRESS_IN_NEW_RPC", config.isUseValueCompressionInNewRPC() + "")));
+        config.setUseTimeCompressionInNewRPC(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "USE_TIME_COMPRESS_IN_NEW_RPC", config.isUseTimeCompressionInNewRPC() + "")));
         config.setSG_STRATEGY(properties.getProperty("SG_STRATEGY", config.getSG_STRATEGY()));
         config.setGROUP_NUMBER(
             Integer.parseInt(

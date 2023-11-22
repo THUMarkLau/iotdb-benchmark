@@ -19,6 +19,7 @@
 
 package cn.edu.tsinghua.iot.benchmark.iotdb110;
 
+import org.apache.iotdb.isession.SessionConfig;
 import org.apache.iotdb.isession.template.Template;
 import org.apache.iotdb.isession.util.Version;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
@@ -55,6 +56,7 @@ import cn.edu.tsinghua.iot.benchmark.workload.query.impl.PreciseQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.RangeQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.ValueRangeQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.VerificationQuery;
+import org.mine.rpc.RPCUtilsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,11 +105,95 @@ public class IoTDB implements IDatabase {
   protected Future<?> task;
   protected DBConfig dbConfig;
   protected Random random = new Random(config.getDATA_SEED());
+  public static AtomicBoolean initializeWithExperiment = new AtomicBoolean(false);
 
   public IoTDB(DBConfig dbConfig) {
     this.dbConfig = dbConfig;
     ROOT_SERIES_NAME = "root." + dbConfig.getDB_NAME();
     DELETE_SERIES_SQL = "delete storage group root." + dbConfig.getDB_NAME() + ".*";
+    synchronized (IoTDB.class) {
+      if (!initializeWithExperiment.get()) {
+        initializeWithExperiment.set(true);
+        LOGGER.info("This is a test string");
+        SessionConfig.USE_NEW_RECORDS_RPC_FORMAT = config.isUseNewRecordsColumnFormat();
+        RPCUtilsConfig.useTimeCompression = config.isUseTimeCompressionInNewRPC();
+        RPCUtilsConfig.useValueCompression = config.isUseValueCompressionInNewRPC();
+        //        if (config.isENABLE_THRIFT_COMPRESSION()) {
+        //          Thread thread =
+        //              new Thread(
+        //                  () -> {
+        //                    while (true) {
+        //                      LOGGER.info(
+        //                          "Average compression time for snappy is {} ms ",
+        //                          (double)
+        // TSnappyElasticFramedTransport.totalCompressionTime.get()
+        //                              / TSnappyElasticFramedTransport.totalCompressionCount.get()
+        //                              / 1000000.0);
+        //                      LOGGER.info(
+        //                          "Average compression ratio for snappy is {} ",
+        //                          (double) TSnappyElasticFramedTransport.totalOriginalSize.get()
+        //                              / TSnappyElasticFramedTransport.totalCompressedSize.get());
+        //                      try {
+        //                        Thread.sleep(10000);
+        //                      } catch (InterruptedException e) {
+        //                        e.printStackTrace();
+        //                      }
+        //                    }
+        //                  });
+        //          thread.start();
+        //        }
+        //        if (config.isUseNewRecordsColumnFormat()) {
+        //          Thread thread =
+        //              new Thread(
+        //                  () -> {
+        //                    while (true) {
+        //                      LOGGER.info(
+        //                          "Average compression time for new column format is {} ms ",
+        //                          (double)
+        // InsertRecordsSerializeInColumnUtils.totalSerializeTime.get()
+        //                              /
+        // InsertRecordsSerializeInColumnUtils.totalSerializeCount.get()
+        //                              / 1000000.0);
+        //                      LOGGER.info(
+        //                          "Average compression ratio for new column format is {} ",
+        //                          (double)
+        // InsertRecordsSerializeInColumnUtils.totalOriginalSize.get()
+        //                              /
+        // InsertRecordsSerializeInColumnUtils.totalCompressedSize.get());
+        //                      InsertRecordsSerializeInColumnUtils.totalSerializeCount.set(0);
+        //                      InsertRecordsSerializeInColumnUtils.totalSerializeTime.set(0);
+        //                      InsertRecordsSerializeInColumnUtils.totalOriginalSize.set(0);
+        //                      InsertRecordsSerializeInColumnUtils.totalCompressedSize.set(0);
+        //                      try {
+        //                        Thread.sleep(60000);
+        //                      } catch (InterruptedException e) {
+        //                        e.printStackTrace();
+        //                      }
+        //                    }
+        //                  });
+        //          thread.start();
+        //        }
+        //        new Thread(
+        //                () -> {
+        //                  while (true) {
+        //                    if (TElasticFramedTransport.totalFrameCount.get() != 0) {
+        //                      LOGGER.info(
+        //                          "Average frame size is {} bytes",
+        //                          TElasticFramedTransport.totalFrameSize.doubleValue()
+        //                              / TElasticFramedTransport.totalFrameCount.doubleValue());
+        //                      TElasticFramedTransport.totalFrameSize.set(0);
+        //                      TElasticFramedTransport.totalFrameCount.set(0);
+        //                    }
+        //                    try {
+        //                      Thread.sleep(30000);
+        //                    } catch (InterruptedException e) {
+        //                      e.printStackTrace();
+        //                    }
+        //                  }
+        //                })
+        //            .start();
+      }
+    }
   }
 
   @Override

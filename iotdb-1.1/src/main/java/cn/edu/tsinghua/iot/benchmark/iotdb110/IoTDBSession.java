@@ -170,7 +170,7 @@ public class IoTDBSession extends IoTDBSessionBase {
                 .nodeUrls(hostUrls)
                 .username(dbConfig.getUSERNAME())
                 .password(dbConfig.getPASSWORD())
-                .enableRedirection(true)
+                .enableRedirection(false)
                 .version(Version.V_1_0)
                 .build());
   }
