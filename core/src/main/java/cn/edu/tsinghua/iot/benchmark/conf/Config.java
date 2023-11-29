@@ -51,6 +51,8 @@ public class Config {
    */
   private long INIT_WAIT_TIME = 1000;
 
+  private double RECORD_CONVERT_FACTOR=0.0d;
+
   /** System performance detection network card device name eg. eth0 */
   private String NET_DEVICE = "e";
 
@@ -1809,6 +1811,14 @@ public class Config {
     configProperties.addProperty(
         "Extern Param", "READ_OPERATION_TIMEOUT_MS", this.READ_OPERATION_TIMEOUT_MS);
     return configProperties;
+  }
+
+  public double getRECORD_CONVERT_FACTOR() {
+    return RECORD_CONVERT_FACTOR;
+  }
+
+  public void setRECORD_CONVERT_FACTOR(double RECORD_CONVERT_FACTOR) {
+    this.RECORD_CONVERT_FACTOR = RECORD_CONVERT_FACTOR;
   }
 
   public boolean hasWrite() {
