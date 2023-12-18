@@ -112,6 +112,7 @@ public class IoTDB implements IDatabase {
 
   @Override
   public void init() throws TsdbException {
+    Session.CONVERT_FACTOR = config.getRECORD_CONVERT_FACTOR();
     if (ioTDBConnection == null) {
       try {
         ioTDBConnection = new SingleNodeJDBCConnection(dbConfig);

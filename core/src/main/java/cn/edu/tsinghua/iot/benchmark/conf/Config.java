@@ -51,7 +51,7 @@ public class Config {
    */
   private long INIT_WAIT_TIME = 1000;
 
-  private double RECORD_CONVERT_FACTOR=0.0d;
+  private double RECORD_CONVERT_FACTOR = 0.0d;
 
   /** System performance detection network card device name eg. eth0 */
   private String NET_DEVICE = "e";
