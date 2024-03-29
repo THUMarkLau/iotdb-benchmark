@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import static cn.edu.tsinghua.iot.benchmark.tsdb.enums.DBInsertMode.INSERT_USE_SESSION_RECORDS;
+import static cn.edu.tsinghua.iot.benchmark.tsdb.enums.DBInsertMode.INSERT_USE_SESSION_TABLETS;
 
 public class ConfigDescriptor {
   private static final Logger LOGGER = LoggerFactory.getLogger(ConfigDescriptor.class);
@@ -237,6 +238,18 @@ public class ConfigDescriptor {
                   properties.getProperty(
                       "TS_ALIGNMENT_RATIO", config.getTS_ALIGNMENT_RATIO() + "")));
         }
+        config.setEnableMemCostCompute(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "ENABLE_MEM_COST_COMPUTE", config.isEnableMemCostCompute() + "")));
+        config.setEnablePathPreCheck(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "ENABLE_PATH_PRE_CHECK", config.isEnablePathPreCheck() + "")));
+        config.setEnableNewRPCFormat(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "ENABLE_NEW_RPC_FORMAT", config.isEnableNewRPCFormat() + "")));
         config.setIS_CLIENT_BIND(
             Boolean.parseBoolean(
                 properties.getProperty("IS_CLIENT_BIND", config.isIS_CLIENT_BIND() + "")));
@@ -316,6 +329,11 @@ public class ConfigDescriptor {
             Boolean.parseBoolean(
                 properties.getProperty(
                     "USE_VALUE_COMPRESS_IN_NEW_RPC", config.isUseValueCompressionInNewRPC() + "")));
+        config.setUseSchemaCompressionInNewRPC(
+            Boolean.parseBoolean(
+                properties.getProperty(
+                    "USE_SCHEMA_COMPRESS_IN_NEW_RPC",
+                    config.isUseSchemaCompressionInNewRPC() + "")));
         config.setUseTimeCompressionInNewRPC(
             Boolean.parseBoolean(
                 properties.getProperty(
@@ -635,7 +653,8 @@ public class ConfigDescriptor {
       LOGGER.error("DEVICE_NUM_PER_WRITE is only supported in IoTDB");
       return false;
     }
-    if (config.getDbConfig().getDB_SWITCH().getInsertMode() != INSERT_USE_SESSION_RECORDS) {
+    if (config.getDbConfig().getDB_SWITCH().getInsertMode() != INSERT_USE_SESSION_RECORDS
+        && config.getDbConfig().getDB_SWITCH().getInsertMode() != INSERT_USE_SESSION_TABLETS) {
       LOGGER.error("The combination of DEVICE_NUM_PER_WRITE and insert-mode is not supported");
       return false;
     }

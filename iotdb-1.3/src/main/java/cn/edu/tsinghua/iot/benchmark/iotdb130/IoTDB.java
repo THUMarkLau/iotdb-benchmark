@@ -99,6 +99,7 @@ public class IoTDB implements IDatabase {
       new CyclicBarrier(config.getCLIENT_NUMBER());
   protected static Set<String> storageGroups = Collections.synchronizedSet(new HashSet<>());
   protected final String ROOT_SERIES_NAME;
+  public static AtomicBoolean initializeWithExperiment = new AtomicBoolean(false);
   protected ExecutorService service;
   protected Future<?> task;
   protected DBConfig dbConfig;
@@ -108,6 +109,12 @@ public class IoTDB implements IDatabase {
     this.dbConfig = dbConfig;
     ROOT_SERIES_NAME = "root." + dbConfig.getDB_NAME();
     DELETE_SERIES_SQL = "delete storage group root." + dbConfig.getDB_NAME() + ".*";
+    synchronized (IoTDB.class) {
+      if (!initializeWithExperiment.get()) {
+        initializeWithExperiment.set(true);
+        LOGGER.info("This is a test string");
+      }
+    }
   }
 
   @Override

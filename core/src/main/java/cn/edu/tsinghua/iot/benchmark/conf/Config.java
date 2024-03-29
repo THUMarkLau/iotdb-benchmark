@@ -56,6 +56,26 @@ public class Config {
 
   private boolean useNewRecordsColumnFormat = true;
 
+  public boolean isUseSchemaCompressionInNewRPC() {
+    return useSchemaCompressionInNewRPC;
+  }
+
+  public void setUseSchemaCompressionInNewRPC(boolean useSchemaCompressionInNewRPC) {
+    this.useSchemaCompressionInNewRPC = useSchemaCompressionInNewRPC;
+  }
+
+  private boolean useSchemaCompressionInNewRPC = true;
+
+  public boolean isEnablePathPreCheck() {
+    return enablePathPreCheck;
+  }
+
+  public void setEnablePathPreCheck(boolean enablePathPreCheck) {
+    this.enablePathPreCheck = enablePathPreCheck;
+  }
+
+  private boolean enablePathPreCheck = false;
+
   private boolean useValueCompressionInNewRPC = true;
   private boolean useTimeCompressionInNewRPC = true;
 
@@ -180,7 +200,7 @@ public class Config {
 
   // 设备、传感器、客户端相关参数
   /** The number of devices of database */
-  private int DEVICE_NUMBER = 6000;
+  private int DEVICE_NUMBER = 10;
 
   /** The ratio of actual write devices. (0,1] */
   private double REAL_INSERT_RATE = 1.0;
@@ -188,7 +208,7 @@ public class Config {
   /**
    * The number of sensors of each device. The number of timeseries = DEVICE_NUMBER * SENSOR_NUMBER
    */
-  private int SENSOR_NUMBER = 200;
+  private int SENSOR_NUMBER = 10;
 
   /** Whether the sensor timestamp is aligned */
   private boolean IS_SENSOR_TS_ALIGNMENT = true;
@@ -206,7 +226,7 @@ public class Config {
    * The number of client if IS_CLIENT_BIND = true: this number must be less than or equal to the
    * number of devices.
    */
-  private int CLIENT_NUMBER = 20;
+  private int CLIENT_NUMBER = 1;
 
   /** name prefix of group */
   private String GROUP_NAME_PREFIX = "g_";
@@ -263,7 +283,7 @@ public class Config {
   private String TEMPLATE_NAME = "BenchmarkTemplate";
 
   /** Whether to use vector */
-  private boolean VECTOR = true;
+  private boolean VECTOR = false;
 
   /** whether to use debug in iotdb-0.13 */
   private boolean IOTDB_USE_DEBUG = false;
@@ -468,6 +488,25 @@ public class Config {
 
   /** Current csv file write line */
   private AtomicLong CURRENT_RECORD_LINE = new AtomicLong();
+
+  public boolean isEnableNewRPCFormat() {
+    return enableNewRPCFormat;
+  }
+
+  public void setEnableNewRPCFormat(boolean enableNewRPCFormat) {
+    this.enableNewRPCFormat = enableNewRPCFormat;
+  }
+
+  public boolean isEnableMemCostCompute() {
+    return enableMemCostCompute;
+  }
+
+  public void setEnableMemCostCompute(boolean enableMemCostCompute) {
+    this.enableMemCostCompute = enableMemCostCompute;
+  }
+
+  private boolean enableNewRPCFormat = false;
+  private boolean enableMemCostCompute = false;
 
   /** Sensors */
   private List<Sensor> SENSORS = new ArrayList<>();

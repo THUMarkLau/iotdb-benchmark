@@ -45,6 +45,7 @@ public class DBFactory {
         case DB_IOT_130_SESSION_BY_TABLET:
         case DB_IOT_130_SESSION_BY_RECORD:
         case DB_IOT_130_SESSION_BY_RECORDS:
+        case DB_IOT_130_SESSION_BY_TABLETS:
           if (config.isIS_ALL_NODES_VISIBLE()) {
             dbClass = Constants.IOTDB130_ROUNDROBIN_SESSION_CLASS;
           } else {

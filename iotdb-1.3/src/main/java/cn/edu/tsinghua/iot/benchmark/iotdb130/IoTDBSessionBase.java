@@ -93,6 +93,25 @@ public class IoTDBSessionBase extends IoTDB {
     return waitWriteTaskToFinishAndGetStatus();
   }
 
+  public Status insertOneBatchByTablets(IBatch batch) {
+    final Map<String, Tablet> tablets = new HashMap<>();
+    while (batch.hasNext()) {
+      Tablet tablet = genTablet(batch);
+      tablets.put(tablet.deviceId, tablet);
+      batch.next();
+    }
+    task =
+        service.submit(
+            () -> {
+              try {
+                sessionWrapper.insertTablets(tablets);
+              } catch (IoTDBConnectionException | StatementExecutionException e) {
+                throw new OperationFailException(e);
+              }
+            });
+    return waitWriteTaskToFinishAndGetStatus();
+  }
+
   public Status insertOneBatchByRecord(IBatch batch) {
     String deviceId = getDevicePath(batch.getDeviceSchema());
     int failRecord = 0;
@@ -484,6 +503,8 @@ public class IoTDBSessionBase extends IoTDB {
         return insertOneBatchByRecord(batch);
       case INSERT_USE_SESSION_RECORDS:
         return insertOneBatchByRecords(batch);
+      case INSERT_USE_SESSION_TABLETS:
+        return insertOneBatchByTablets(batch);
       default:
         throw new IllegalStateException("Unexpected INSERT_MODE value: " + insertMode);
     }

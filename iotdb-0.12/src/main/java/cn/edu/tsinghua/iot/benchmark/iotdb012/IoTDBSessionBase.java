@@ -49,6 +49,10 @@ public class IoTDBSessionBase extends IoTDB {
     return new Status(true);
   }
 
+  public Status insertOneBatchByTablets(IBatch batch) {
+    return new Status(true);
+  }
+
   public Status insertOneBatchByRecord(IBatch batch) {
     return new Status(true);
   }
@@ -158,6 +162,8 @@ public class IoTDBSessionBase extends IoTDB {
         return insertOneBatchByRecord(batch);
       case INSERT_USE_SESSION_RECORDS:
         return insertOneBatchByRecords(batch);
+      case INSERT_USE_SESSION_TABLETS:
+        return insertOneBatchByTablets(batch);
       default:
         throw new IllegalStateException("Unexpected INSERT_MODE value: " + insertMode);
     }

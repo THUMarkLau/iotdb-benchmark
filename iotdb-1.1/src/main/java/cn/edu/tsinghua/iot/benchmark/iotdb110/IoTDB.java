@@ -19,7 +19,6 @@
 
 package cn.edu.tsinghua.iot.benchmark.iotdb110;
 
-import org.apache.iotdb.isession.SessionConfig;
 import org.apache.iotdb.isession.template.Template;
 import org.apache.iotdb.isession.util.Version;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
@@ -56,7 +55,6 @@ import cn.edu.tsinghua.iot.benchmark.workload.query.impl.PreciseQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.RangeQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.ValueRangeQuery;
 import cn.edu.tsinghua.iot.benchmark.workload.query.impl.VerificationQuery;
-import org.mine.rpc.RPCUtilsConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -114,10 +112,6 @@ public class IoTDB implements IDatabase {
     synchronized (IoTDB.class) {
       if (!initializeWithExperiment.get()) {
         initializeWithExperiment.set(true);
-        LOGGER.info("This is a test string");
-        SessionConfig.USE_NEW_RECORDS_RPC_FORMAT = config.isUseNewRecordsColumnFormat();
-        RPCUtilsConfig.useTimeCompression = config.isUseTimeCompressionInNewRPC();
-        RPCUtilsConfig.useValueCompression = config.isUseValueCompressionInNewRPC();
         //        if (config.isENABLE_THRIFT_COMPRESSION()) {
         //          Thread thread =
         //              new Thread(

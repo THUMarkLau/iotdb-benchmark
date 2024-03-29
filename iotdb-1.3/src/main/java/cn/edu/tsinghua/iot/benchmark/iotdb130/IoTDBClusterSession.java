@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class IoTDBClusterSession extends IoTDBSessionBase {
@@ -113,6 +114,12 @@ public class IoTDBClusterSession extends IoTDBSessionBase {
     public void insertTablet(Tablet tablet)
         throws IoTDBConnectionException, StatementExecutionException {
       sessionPool.insertTablet(tablet);
+    }
+
+    @Override
+    public void insertTablets(Map<String, Tablet> tablets)
+        throws IoTDBConnectionException, StatementExecutionException {
+      sessionPool.insertTablets(tablets);
     }
 
     @Override

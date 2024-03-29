@@ -157,6 +157,22 @@ public class IoTDBSession extends IoTDBSessionBase {
   }
 
   @Override
+  public Status insertOneBatchByTablets(IBatch batch) {
+    Map<String, Tablet> tablets = new HashMap<>();
+    while (batch.hasNext()) {
+      Tablet tablet = genTablet(batch);
+      tablets.put(tablet.deviceId, tablet);
+      batch.next();
+    }
+    try {
+      session.insertTablets(tablets);
+      return new Status(true);
+    } catch (IoTDBConnectionException | StatementExecutionException e) {
+      return new Status(false, 0, e, e.toString());
+    }
+  }
+
+  @Override
   protected Status executeQueryAndGetStatus(String sql, Operation operation) {
     if (!config.isIS_QUIET_MODE()) {
       LOGGER.info("{} query SQL: {}", Thread.currentThread().getName(), sql);

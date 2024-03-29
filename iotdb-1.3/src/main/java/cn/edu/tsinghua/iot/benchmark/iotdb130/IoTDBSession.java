@@ -19,6 +19,7 @@
 
 package cn.edu.tsinghua.iot.benchmark.iotdb130;
 
+import org.apache.iotdb.isession.SessionConfig;
 import org.apache.iotdb.isession.SessionDataSet;
 import org.apache.iotdb.isession.util.Version;
 import org.apache.iotdb.rpc.IoTDBConnectionException;
@@ -30,17 +31,27 @@ import org.apache.iotdb.tsfile.write.record.Tablet;
 
 import cn.edu.tsinghua.iot.benchmark.tsdb.DBConfig;
 import cn.edu.tsinghua.iot.benchmark.tsdb.TsdbException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class IoTDBSession extends IoTDBSessionBase {
+  private static Logger logger = LoggerFactory.getLogger(IoTDBSession.class);
+
   private class BenchmarkSession implements IBenchmarkSession {
     private final Session session;
 
     public BenchmarkSession(Session session) {
+      SessionConfig.enableMemPreCompute = config.isEnableMemCostCompute();
+      SessionConfig.enablePathPreCheck = config.isEnablePathPreCheck();
+      logger.info(
+          "Initializing session with enablePathPreCheck: {}, enableMemPreCompute: {}",
+          SessionConfig.enablePathPreCheck,
+          SessionConfig.enableMemPreCompute);
       this.session = session;
     }
 
@@ -103,6 +114,12 @@ public class IoTDBSession extends IoTDBSessionBase {
     public void insertTablet(Tablet tablet)
         throws IoTDBConnectionException, StatementExecutionException {
       session.insertTablet(tablet);
+    }
+
+    @Override
+    public void insertTablets(Map<String, Tablet> tablets)
+        throws IoTDBConnectionException, StatementExecutionException {
+      session.insertTablets(tablets);
     }
 
     @Override
@@ -170,7 +187,6 @@ public class IoTDBSession extends IoTDBSessionBase {
                 .nodeUrls(hostUrls)
                 .username(dbConfig.getUSERNAME())
                 .password(dbConfig.getPASSWORD())
-                .enableRedirection(true)
                 .version(Version.V_1_0)
                 .build());
   }

@@ -6,6 +6,7 @@ import org.apache.iotdb.tsfile.file.metadata.enums.TSDataType;
 import org.apache.iotdb.tsfile.write.record.Tablet;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBenchmarkSession {
   void open() throws IoTDBConnectionException;
@@ -45,6 +46,9 @@ public interface IBenchmarkSession {
       throws IoTDBConnectionException, StatementExecutionException;
 
   void insertTablet(Tablet tablet) throws IoTDBConnectionException, StatementExecutionException;
+
+  void insertTablets(Map<String, Tablet> tablets)
+      throws IoTDBConnectionException, StatementExecutionException;
 
   void insertAlignedTablet(Tablet tablet)
       throws IoTDBConnectionException, StatementExecutionException;
