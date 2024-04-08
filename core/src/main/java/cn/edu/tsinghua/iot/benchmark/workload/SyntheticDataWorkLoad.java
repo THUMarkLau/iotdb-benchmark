@@ -29,6 +29,8 @@ import cn.edu.tsinghua.iot.benchmark.schema.MetaUtil;
 import cn.edu.tsinghua.iot.benchmark.schema.schemaImpl.DeviceSchema;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SyntheticDataWorkLoad extends GenerateDataWorkLoad {
 
@@ -60,6 +62,9 @@ public class SyntheticDataWorkLoad extends GenerateDataWorkLoad {
 
   @Override
   public IBatch getOneBatch() throws WorkloadException {
+    if (config.isRANDOM_SENSOR_INSERT()) {
+      return getOneBatchWithRandomSensor();
+    }
     IBatch batch;
     // TODO: bad, should be fixed in the future
     final int recordNumPerDevice = config.getBATCH_SIZE_PER_WRITE();
@@ -104,6 +109,51 @@ public class SyntheticDataWorkLoad extends GenerateDataWorkLoad {
         insertLoop++;
       }
       batch.addSchemaAndContent(deviceSchema, records);
+    }
+    return batch;
+  }
+
+  private IBatch getOneBatchWithRandomSensor() throws WorkloadException {
+    IBatch batch;
+    // TODO: bad, should be fixed in the future
+    final int recordNumPerDevice = config.getBATCH_SIZE_PER_WRITE();
+    // create the schema of batch
+    if (config.getDEVICE_NUM_PER_WRITE() == 1) {
+      batch = new Batch();
+    } else {
+      batch = new MultiDeviceBatch(config.getDEVICE_NUM_PER_WRITE());
+    }
+    for (int i = 0; i < config.getDEVICE_NUM_PER_WRITE(); i++) {
+      long rowOffset = insertLoop * config.getBATCH_SIZE_PER_WRITE();
+      for (int j = 0; j < config.getBATCH_SIZE_PER_WRITE(); ++j) {
+        List<Sensor> sensors = new ArrayList<>();
+        List<Integer> colIndexes =
+            IntStream.range(0, deviceSchemas.get(deviceIndex).getSensors().size())
+                .boxed()
+                .collect(Collectors.toList());
+        Collections.shuffle(colIndexes);
+        colIndexes =
+            colIndexes.stream()
+                .limit(Math.max(1, (int) (colIndexes.size() * 0.8)))
+                .collect(Collectors.toList());
+        for (int idx : colIndexes) {
+          sensors.add(deviceSchemas.get(deviceIndex).getSensors().get(idx));
+        }
+        DeviceSchema deviceSchema =
+            new DeviceSchema(
+                deviceSchemas.get(deviceIndex).getDeviceId(),
+                sensors,
+                deviceSchemas.get(deviceIndex).getTags());
+        Record record =
+            new Record(
+                getCurrentTimestamp(rowOffset + j), generateOneRow(colIndexes, rowOffset + j));
+        batch.addSchemaAndContent(deviceSchema, Collections.singletonList(record));
+      }
+      deviceIndex++;
+      if (deviceIndex >= deviceSchemaSize) {
+        deviceIndex = 0;
+        insertLoop++;
+      }
     }
     return batch;
   }

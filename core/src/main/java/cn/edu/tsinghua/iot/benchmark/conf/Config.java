@@ -162,6 +162,8 @@ public class Config {
 
   /** Whether the sensor timestamp is aligned */
   private boolean IS_SENSOR_TS_ALIGNMENT = true;
+
+  private boolean RANDOM_SENSOR_INSERT = true;
   /** The ratio of not null sensor of one device. */
   private double TS_ALIGNMENT_RATIO = 1.0;
   /**
@@ -1579,6 +1581,14 @@ public class Config {
     this.VERIFICATION_STEP_SIZE = VERIFICATION_STEP_SIZE;
   }
 
+  public boolean isRANDOM_SENSOR_INSERT() {
+    return RANDOM_SENSOR_INSERT;
+  }
+
+  public void setRANDOM_SENSOR_INSERT(boolean RANDOM_SENSOR_INSERT) {
+    this.RANDOM_SENSOR_INSERT = RANDOM_SENSOR_INSERT;
+  }
+
   /** write dataset config to info */
   public String toInfoText() {
     return "LOOP="
@@ -1661,7 +1671,9 @@ public class Config {
         + "\nQUERY_SEED="
         + QUERY_SEED
         + "\nWORKLOAD_BUFFER_SIZE="
-        + WORKLOAD_BUFFER_SIZE;
+        + WORKLOAD_BUFFER_SIZE
+        + "\nRANDOM_SENSOR_INSERT="
+        + RANDOM_SENSOR_INSERT;
   }
 
   /** get properties from config, one property in one line. */

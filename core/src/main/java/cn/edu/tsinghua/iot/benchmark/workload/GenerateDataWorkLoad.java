@@ -80,6 +80,23 @@ public abstract class GenerateDataWorkLoad extends DataWorkLoad {
     return values;
   }
 
+  protected List<Object> generateOneRow(List<Integer> colIndexes, long stepOffset) {
+    List<Object> values = new ArrayList<>();
+    if (colIndexes.isEmpty()) {
+      for (int i = 0; i < config.getSENSOR_NUMBER(); i++) {
+        values.add(
+            workloadValues[i][(int) (Math.abs(stepOffset) % config.getWORKLOAD_BUFFER_SIZE())]);
+      }
+    } else {
+      for (int i : colIndexes) {
+        values.add(
+            workloadValues[i][
+                (int) (Math.abs(stepOffset) % config.getWORKLOAD_BUFFER_SIZE())]);
+      }
+    }
+    return values;
+  }
+
   /** Get timestamp according to stepOffset */
   protected long getCurrentTimestamp(long stepOffset) throws WorkloadException {
     if (config.isIS_OUT_OF_ORDER()) {

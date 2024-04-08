@@ -131,16 +131,12 @@ public class IoTDBSessionBase extends IoTDB {
     List<List<String>> measurementsList = new ArrayList<>();
     List<List<TSDataType>> typesList = new ArrayList<>();
     List<List<Object>> valuesList = new ArrayList<>();
-    List<String> sensors =
-        batch.getDeviceSchema().getSensors().stream()
-            .map(Sensor::getName)
-            .collect(Collectors.toList());
     while (true) {
       String deviceId = getDevicePath(batch.getDeviceSchema());
       for (Record record : batch.getRecords()) {
         deviceIds.add(deviceId);
         times.add(record.getTimestamp());
-        measurementsList.add(sensors);
+        measurementsList.add(batch.getDeviceSchema().getSensors().stream().map(Sensor::getName).collect(Collectors.toList()));
         valuesList.add(record.getRecordDataValue());
         typesList.add(
             constructDataTypes(
